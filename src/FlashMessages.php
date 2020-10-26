@@ -168,7 +168,7 @@ class FlashMessages
         }
 
         // Add the message to the session data
-        if (!array_key_exists($type, $_SESSION['flash_messages'])) {
+        if (!isset($_SESSION['flash_messages']) || !array_key_exists($type, $_SESSION['flash_messages'])) {
             $_SESSION['flash_messages'][$type] = [];
         }
         $_SESSION['flash_messages'][$type][] = ['sticky' => $sticky, 'message' => $message];
