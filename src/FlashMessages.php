@@ -69,7 +69,7 @@ class FlashMessages
         $this->msgId = sha1(uniqid());
 
         // Create session array to hold our messages if it doesn't already exist
-        if (!array_key_exists('flash_messages', $_SESSION)) {
+        if (isset($_SESSION) && !array_key_exists('flash_messages', $_SESSION)) {
             $_SESSION['flash_messages'] = [];
         }
     }
@@ -152,10 +152,14 @@ class FlashMessages
      * @param string $redirectUrl Where to redirect once the message is added
      * @param bool   $sticky      Whether or not the message is stickied
      *
-     * @return object
+     * @return object|boolean
      */
     public function add($message, $type = self::defaultType, $redirectUrl = null, $sticky = false)
     {
+        if (!isset($_SESSION)) {
+            return false;
+        }
+
         // Make sure a message and valid type was passed
         if (!isset($message[0])) {
             return false;
@@ -194,8 +198,8 @@ class FlashMessages
      */
     public function display($types = null, $print = true)
     {
-        if (!isset($_SESSION['flash_messages'])) {
-            return false;
+        if (!isset($_SESSION) || !isset($_SESSION['flash_messages'])) {
+            return '';
         }
 
         $output = '';
